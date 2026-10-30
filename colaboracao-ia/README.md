@@ -26,7 +26,7 @@ python3 colaboracao-ia/05_ferramentas/verificar_dados.py
 
 O verificador não substitui revisão linguística, pedagógica ou visual. Antes de publicar, revisar o PDF exportado em tela e impressão, página a página.
 
-## Estado verificado em 2026-10-30
+## Materiais históricos no repositório\n\nOs arquivos originais `O Japonês que Encolhe.html`, `paginas-modelo.html`, `docs/index.html` e o PDF do Capítulo 4 foram preservados sem alteração como evidência histórica. Alguns contêm referências antigas a áudio/QR e não são especificações nem entregáveis aprovados do produto PDF-only.\n\n## Estado verificado em 2026-10-30
 
 A suíte automatizada passou (7/7) após uma correção nos testes. O verificador estrutural também passou, mas os quatro CSVs oficiais permanecem vazios. Isso não valida conteúdo editorial.
 
