@@ -9,7 +9,8 @@ Fonte única do status da infraestrutura. Outros documentos citam este arquivo e
 | Leitura dos 8 CSVs com conferência de UTF-8 sem BOM, LF, cabeçalho exato e número de colunas | `05_ferramentas/verificar_dados.py` (`ler_tabela`) | `EstruturaEArquivos`, `CodigosRestantes` |
 | Formatos e valores de todos os campos (IDs, enums, inteiros, datas, SHAs, listas `\|`, furigana, velocidade 010–200, caminho relativo) | `_validar_campos` | `CodigosRestantes`, `EstruturaEArquivos`, `test_11c` |
 | Unicidade de todas as chaves, inclusive (faixa, velocidade, versão, tomada) | `_indexar` | `test_11_*` |
-| Regras de integridade 1 a 17 (`ESQUEMA.md` seção 3) | `_validar_relacoes`, `_resolver_audios`, `_avaliar_validacoes` | um teste por regra (`COBERTURA.md`, matriz A2) |
+| Regras de integridade 1 a 17 (`ESQUEMA.md` seção 3) | `_validar_relacoes`, `_resolver_audios`, `_avaliar_validacoes` | ao menos um teste por regra (`COBERTURA.md`, tabela A2b) |
+| Esquema, CSVs oficiais e código descrevem as mesmas colunas, valores fixos e versão | — | `SincroniaEsquemaCodigo` |
 | Impressões SHA-256 (normalização NFC, separadores U+001F/U+001E/U+001D, ordenação, prefixo `imp-v1`) | `normalizar`, `registro`, `lista`, `impressao`, `_calcular_impressoes` | `test_impressao_e_deterministica_e_normalizada`, `test_05b` |
 | Conferência das impressões correntes gravadas | `_conferir_impressoes_gravadas` | `test_07b`, `test_impressao_nao_gravada` |
 | Resolução da gravação usada por exercício (`ATIVO` e `FIXO`) | `_resolver_audios` | `test_06*`, `test_08*`, `test_09` |

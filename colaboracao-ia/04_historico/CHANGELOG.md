@@ -15,8 +15,9 @@ Formato: data · versão (commit) · autor · o que mudou · por quê. Entradas 
 | 6 | `be6875222fa16a17fee460dcb8c80168cf828354` | correções dos pontos P13–P15 (fecha o ajuste de P08) | material do pedido da 4ª revisão |
 | 7 | `35c552c4a0e0667e8b7f7e9cfa3ea7bfc16596e1` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | não altera material |
 | 8 | `2623de6e378cce909161af4c3cad6c1a6cdca78e` | corrige a contagem (18 → 16) em `NOVA_REVISAO_SOLICITADA_3.md` | não altera material; antes ausente desta tabela (CL-10) |
-| 9 | registrado em `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md` | rodada final: verificador, testes, protocolo, documentação sincronizada (CL-02 a CL-13) | material candidato à aprovação final |
-| 10 | registrado no comentário do PR #1 | relatório final, SHAs do commit 9 e registro de apontamentos atualizado | não altera código nem dados |
+| 9 | `6c24abc8e3d654e696d06297796cf10215b98ef8` | rodada final: verificador, testes, protocolo, documentação sincronizada (CL-02 a CL-13) | material principal da rodada final |
+| 10 | registrado em `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md` | testes de sincronia esquema × código; tabela regra × teste; apontamentos CL-02 a CL-13 com `commit_correcao` = commit 9 | **commit candidato à aprovação final** (todos os resultados do relatório foram obtidos nele) |
+| 11 | registrado no comentário do PR #1 | só acrescenta `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md` | não altera código, dados nem testes |
 
 A 4ª revisão (pedida no commit 7) não aconteceu como rodada separada: o responsável humano pediu uma rodada final de implementação, que absorve P13–P15.
 

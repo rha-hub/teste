@@ -33,6 +33,30 @@ Este arquivo diz exatamente o que cada teste verifica, o que **não** verifica e
 | 14 | Exercício sem resposta correta | `test_14_exercicio_sem_resposta_correta` | ERRO `SEM_RESPOSTA_CORRETA`; a `PEDAGOGICA` perde a vigência |
 | 15 | Validação antiga após mudança de dependência | `test_15_validacao_antiga_nao_continua_aprovada`, `test_15b_reverter_conteudo_reativa_validacao_antiga_com_aviso` | a validação antiga fica no arquivo, mas não vale; o exercício perde a aprovação; uma nova validação restaura o código 0. Se o conteúdo volta ao anterior, a validação antiga volta a valer, com aviso |
 
+### A2b. Regras de integridade × testes
+
+| Regra (`ESQUEMA.md` seção 3) | Teste(s) |
+|---|---|
+| 1 referências | `test_10_gravacao_inexistente`, `test_10b_validacao_de_item_inexistente`, `test_10c_frase_inexistente_em_exercicio_e_segmento` |
+| 2 resposta correta | `test_14_exercicio_sem_resposta_correta` |
+| 3 segmentos e ordem | `test_faixa_sem_segmentos`, `test_buraco_na_ordem_dos_segmentos` |
+| 4 item retirado | `test_referencia_a_item_retirado`, `test_08b_fixo_para_gravacao_retirada_e_erro` |
+| 5 capítulo posterior | `test_frase_de_capitulo_posterior` |
+| 6 ID da gravação (inclui tomada) | `test_11b_identificador_de_arquivo_com_tomada_incoerente`, `test_11c_formato_de_identificador_de_arquivo` |
+| 7 uma gravação ativa | `test_12_duas_gravacoes_ativas_mesma_faixa_e_velocidade` |
+| 8 unicidade | `test_11_identificadores_duplicados` |
+| 9 coerência de `FIXO`/`ATIVO` | `test_08c_fixo_com_velocidade_diferente_e_erro`, `test_08d_fixo_sem_arquivo_e_ativo_com_arquivo_sao_erros` |
+| 10 gravação ativa disponível | `test_09_ativo_sem_gravacao_ativa_e_erro` |
+| 11 `FIXO` substituído / retirado | `test_08_fixo_mantem_gravacao_quando_outra_vira_ativa`, `test_08b_fixo_para_gravacao_retirada_e_erro` |
+| 12 escuta sem áudio | `test_escuta_sem_audio` |
+| 13 forma reduzida inexistente | `test_segmento_reduzido_de_frase_sem_reducao` |
+| 14 versão futura | `test_13b_gravacao_futura_e_erro` |
+| 15 capítulo do ID, prefixo da resposta | `test_capitulo_do_id_coerente`, `test_prefixo_da_resposta` |
+| 16 furigana | `test_04b_furigana_malformada_e_erro` |
+| 17 validações | `test_humano_sem_identificacao_e_erro`, `test_dimensao_incompativel_com_item`, `test_lista_de_gravacoes_resolvidas_obrigatoria`, `test_resolvidos_indevido` |
+
+A classe `SincroniaEsquemaCodigo` falha se uma coluna, um valor fixo, uma dimensão ou a versão do esquema estiver no código e não em `ESQUEMA.md`, ou se os CSVs oficiais tiverem cabeçalho diferente do código.
+
 Casos válidos: `test_estado_aprovado_sem_achados`, `test_csvs_oficiais_vazios_sao_validos`, `test_05b_ordem_das_linhas_no_csv_nao_importa`, `test_atualizar_impressoes_nao_muda_nada_no_estado_aprovado`, `test_08_fixo_mantem_gravacao_quando_outra_vira_ativa`, `Apontamentos.test_valido`, `Apontamentos.test_registro_oficial_e_valido`.
 
 Outras classes:

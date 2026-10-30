@@ -573,6 +573,38 @@ class CoberturaDosCodigos(unittest.TestCase):
         self.assertEqual(sorted(c for c in cods if f'"{c}"' not in testes), [])
 
 
+class SincroniaEsquemaCodigo(unittest.TestCase):
+    """Esquema, CSVs oficiais e código descrevem as mesmas colunas e valores."""
+
+    def setUp(self):
+        self.esquema = (AQUI.parent / "01_dados" / "ESQUEMA.md").read_text(encoding="utf-8")
+
+    def test_csvs_oficiais_tem_os_cabecalhos_do_codigo(self):
+        for nome, cab in vd.CABECALHOS.items():
+            primeira = (AQUI.parent / "01_dados" / nome).read_text(encoding="utf-8").splitlines()[0]
+            self.assertEqual(primeira.split(","), cab, nome)
+
+    def test_esquema_documenta_cada_arquivo_e_coluna(self):
+        import re
+        for nome, cab in vd.CABECALHOS.items():
+            self.assertIn(f"`{nome}`", self.esquema)
+            # a seção 4 lista as colunas de cada arquivo logo após o título "### <arquivo>"
+            m = re.search(rf"### {re.escape(nome)}[^\n]*\n(.*?)(?=\n### |\n## )", self.esquema, re.S)
+            self.assertIsNotNone(m, nome)
+            faltam = [c for c in cab if f"`{c}`" not in m.group(1)]
+            self.assertEqual(faltam, [], f"{nome}: colunas sem documentação na seção 4")
+
+    def test_esquema_documenta_valores_fixos(self):
+        for chave in ("registro", "dimensao", "status", "revisor", "modo_selecao", "situacao_arquivo", "tipo_resposta"):
+            for valor in vd.ENUM[chave]:
+                self.assertIn(f"`{valor}`", self.esquema, f"{chave}={valor}")
+        for dim, aprovadores in vd.APROVADORES_FINAIS.items():
+            self.assertIn(f"`{dim}`", self.esquema)
+        self.assertEqual(vd.VELOCIDADES_PILOTO, {"100", "080"})
+        self.assertIn("Versão do esquema: **5**", self.esquema)
+        self.assertEqual(vd.VERSAO_ESQUEMA, 5)
+
+
 class LinhaDeComando(Base):
     SCRIPT = AQUI.parent / "05_ferramentas" / "verificar_dados.py"
 
