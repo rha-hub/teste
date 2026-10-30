@@ -1,3 +1,5 @@
+> **HISTÓRICO — SUPERADO.** Este documento registra uma rodada anterior e pode conter requisitos de áudio ou arquitetura que não se aplicam mais. A decisão vigente é exclusivamente um livro estático em PDF. Preservado como evidência; não usar como instrução atual.
+
 # Nova revisão solicitada · Rodada 01, 4ª revisão (verificação de P13–P15)
 
 ```
