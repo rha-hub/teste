@@ -1,3 +1,4 @@
+// HISTÓRICO SUPERADO: este smoke test exercita protótipos HTML interativos anteriores à decisão de produto PDF-only. Não faz parte da suíte ativa. Preservado como evidência; ver COBERTURA.md.
 #!/usr/bin/env node
 // Teste de fumaça (smoke test) para materiais HTML de "O Japonês por Trás das Palavras".
 // Somente leitura: abre o arquivo no Chromium e nunca o altera.
