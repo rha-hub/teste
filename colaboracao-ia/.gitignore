@@ -1,2 +1,4 @@
-# Resultados locais do teste (não versionar; anexar à revisão só o relatório citado)
+# Resultados locais do teste HTML (não versionar; anexar à revisão só o relatório citado)
 02_testes/resultados/
+# Cache do Python
+__pycache__/

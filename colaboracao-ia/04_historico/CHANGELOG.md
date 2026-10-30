@@ -12,10 +12,39 @@ Formato: data · versão (commit) · autor · o que mudou · por quê. Entradas 
 | 3 | `cd08f0da92f994157fb1a55f2fb9080924dd427f` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA.md`, que cita o commit 2 | head da branch durante a 2ª revisão (presumido); não altera material |
 | 4 | `81c3479233768db7a5760d70790ca1f7096c071d` | correções dos pontos P07–P12 | material examinado na **3ª revisão** (P07, P09–P12 aprovados; P08 com ajuste pedido) |
 | 5 | `31cccb55fae8d17e0ef902826c13c4d3c08ad1bb` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_2.md`, que cita o commit 4 | head da branch durante a 3ª revisão (presumido); não altera material |
-| 6 | registrado em `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | correções dos pontos P13–P15 (fecha o ajuste de P08) | material a examinar na **4ª revisão** |
-| 7 | registrado no comentário do PR #1 | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | não altera material |
+| 6 | `be6875222fa16a17fee460dcb8c80168cf828354` | correções dos pontos P13–P15 (fecha o ajuste de P08) | material do pedido da 4ª revisão |
+| 7 | `35c552c4a0e0667e8b7f7e9cfa3ea7bfc16596e1` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | não altera material |
+| 8 | `2623de6e378cce909161af4c3cad6c1a6cdca78e` | corrige a contagem (18 → 16) em `NOVA_REVISAO_SOLICITADA_3.md` | não altera material; antes ausente desta tabela (CL-10) |
+| 9 | registrado em `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md` | rodada final: verificador, testes, protocolo, documentação sincronizada (CL-02 a CL-13) | material candidato à aprovação final |
+| 10 | registrado no comentário do PR #1 | relatório final, SHAs do commit 9 e registro de apontamentos atualizado | não altera código nem dados |
+
+A 4ª revisão (pedida no commit 7) não aconteceu como rodada separada: o responsável humano pediu uma rodada final de implementação, que absorve P13–P15.
 
 Os SHAs históricos acima não mudam: nenhum commit foi reescrito (sem rebase, sem force push).
+
+## 2026-10-30 · rodada final de implementação (CL-02 a CL-13) · Claude (com autorização do responsável humano)
+
+Commit anterior: `2623de6e378cce909161af4c3cad6c1a6cdca78e`. Relatório: `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md`.
+
+**Criado**
+- `05_ferramentas/verificar_dados.py`: verificador executável do esquema v5, com os comandos `verificar`, `atualizar-impressoes`, `fechar-roteiro`, `impressao-validacao` e `verificar-apontamentos`.
+- `05_ferramentas/verificar_originais.py`: confere os 4 arquivos originais e que só `colaboracao-ia/` mudou.
+- `02_testes/test_verificar_dados.py` (suíte), `02_testes/dados_ficticios.py` (dados fictícios isolados), `02_testes/mutacoes.py` (teste de mutação).
+- `PROTOCOLO.md`, `ESTADO.md`, `instrucoes/CHATGPT_REVISOR.md`, `instrucoes/CLAUDE_EXECUTOR.md`.
+- `03_revisao/apontamentos.csv`: registro central de P01–P15, CL-01 e CL-02 a CL-13.
+- `04_historico/DECISOES.md`: decisões D-001 a D-007.
+
+**Alterado**
+- `01_dados/ESQUEMA.md`: esquema v5, alinhado ao código. Inclui revisor com competência e identificação, entradas exatas das impressões, regras 12 a 17, velocidades do piloto e colunas correntes × instantâneos.
+- `01_dados/validacoes.csv`: nova coluna `revisor_identificacao`.
+- `02_testes/COBERTURA.md`: parte A (verificador) e parte B (HTML).
+- `README.md`: vira índice; o protocolo foi para `PROTOCOLO.md`; a regra de mover arquivos ao fim da rodada foi retirada (CL-09).
+- `.gitignore`: ignora `__pycache__/`.
+- `04_historico/CHANGELOG.md`: linhas 6 a 10 da sequência de commits.
+
+**Preservado sem alteração:** os 4 arquivos originais; todos os documentos de revisão anteriores; `02_testes/teste-html-smoke.js`; os CSVs oficiais continuam só com cabeçalhos.
+
+**Aprovação humana:** pendente.
 
 ## 2026-10-30 · correções da 3ª revisão (P13–P15) · Claude (com autorização do responsável humano)
 

@@ -1,8 +1,72 @@
-# Cobertura do teste de HTML (`teste-html-smoke.js`, versão 3)
+# Cobertura dos testes
 
-Este arquivo diz exatamente o que o teste verifica e o que ele **não** verifica. Um resultado "sem falhas" significa só que os itens da primeira tabela passaram. Ele não diz que o material está correto.
+Este arquivo diz exatamente o que cada teste verifica, o que **não** verifica e quais execuções aconteceram. O status geral (implementado, pendente, fora do escopo) fica em `../ESTADO.md`.
 
-## Reação observável não é funcionamento correto
+- **Parte A**: verificador de dados (`05_ferramentas/verificar_dados.py`) e integridade dos originais. Testes automatizados (`unittest`) com dados fictícios isolados.
+- **Parte B**: teste de fumaça de páginas HTML (`teste-html-smoke.js`, Playwright), executado manualmente.
+
+## Parte A · Verificador de dados
+
+### A1. Como os testes funcionam
+
+- `dados_ficticios.py` gera, numa pasta temporária, um conjunto **fictício** com capítulo 99, 2 frases, 3 exercícios (2 de escuta, 1 de múltipla escolha), 5 respostas, 1 faixa com 2 segmentos, 2 gravações (`100` ativa e `080` usada em modo `FIXO`) e 14 validações humanas vigentes. Os "áudios" são pequenos arquivos de texto. Nada disso entra em `01_dados/`.
+- Cada teste parte desse estado aprovado (código 0, nenhum achado), muda **uma** coisa e confere o efeito exato: quais validações perdem a vigência, quais **não** perdem, se a gravação fica desatualizada e se o exercício continua aprovado.
+- `assertSoDesatualizadas` exige que **só** as validações esperadas percam a vigência e que todas as outras continuem `APROVADO`. Isso detecta tanto a falta de invalidação quanto o excesso.
+
+### A2. Cenários obrigatórios
+
+| Nº | Cenário | Teste(s) | Efeito verificado |
+|---|---|---|---|
+| 1 | Só a tradução muda | `test_01_traducao_nao_invalida_audio` | perdem a vigência: `TRADUCAO` e `PEDAGOGICA` da frase e `PEDAGOGICA` dos 2 exercícios que a usam. Continuam vigentes: `LINGUISTICA`, `ROTEIRO`, `GRAVACAO`, `ESCUTA`. Nenhuma gravação desatualizada. `versao_traducao` sobe para 2, `versao_japones` fica em 1 |
+| 2 | Só a explicação muda | `test_02_explicacao_nao_invalida_audio_nem_traducao` | perdem a vigência: `PEDAGOGICA` da frase e dos 2 exercícios. Áudio e tradução intactos. `versao_explicacao` sobe para 2 |
+| 3 | Texto japonês muda | `test_03_texto_japones_invalida_roteiro_e_gravacoes` | perdem a vigência as 3 validações da frase, `ROTEIRO` e `PEDAGOGICA` dos 3 exercícios. `ROTEIRO_DESATUALIZADO` só no segmento 1. As 2 gravações ficam desatualizadas e o exercício de escuta fica bloqueado. `versao_roteiro` sobe para 2 |
+| 4 | Furigana muda | `test_04_furigana_e_mudanca_no_japones`, `test_04b_furigana_malformada_e_erro` | a leitura é tratada como japonês (roteiro e gravações desatualizados); furigana malformada é ERRO |
+| 5 | Ordem dos segmentos muda | `test_05_ordem_dos_segmentos_invalida_roteiro_nao_frases`, `test_05b_ordem_das_linhas_no_csv_nao_importa` | perdem a vigência só `ROTEIRO` e a `PEDAGOGICA` dos exercícios com a faixa; as frases ficam intactas. Reordenar **linhas** do CSV sem mudar `ordem` não muda nada |
+| 6 | Gravação ativa substituída | `test_06_substituir_gravacao_ativa`, `test_06b_bytes_regravados_no_mesmo_id_invalidam_validacoes` | o exercício `ATIVO` passa a usar a gravação nova; perdem a vigência só a `PEDAGOGICA` e a `ESCUTA` dele, e a mensagem diz qual gravação foi validada e qual é a atual. A gravação nova fica sem aprovação. O exercício `FIXO` não é afetado. Depois de validar de novo, o código volta a 0. Bytes regravados com o mesmo ID também tiram a vigência (pela impressão) |
+| 7 | Velocidade do exercício muda | `test_07_mudar_velocidade_do_exercicio`, `test_07b_mudar_velocidade_sem_atualizar_impressao_e_erro` | resolve para a gravação `080`; perdem a vigência só `PEDAGOGICA` e `ESCUTA` do exercício; `versao` sobe. Sem `atualizar-impressoes`, é ERRO |
+| 8 | Modo `FIXO` | `test_08_*`, `test_08b_*`, `test_08c_*`, `test_08d_*` | mantém a gravação quando outra vira ativa (validações continuam vigentes, com aviso). Gravação `RETIRADO`, velocidade diferente, `FIXO` sem arquivo e `ATIVO` com arquivo dão ERRO |
+| 9 | Modo `ATIVO` | `test_estado_aprovado_sem_achados`, `test_09_ativo_sem_gravacao_ativa_e_erro` | resolve para a gravação ativa; sem gravação ativa, é ERRO e o exercício fica bloqueado |
+| 10 | Referência a gravação inexistente | `test_10_gravacao_inexistente`, `test_10b_*`, `test_10c_*` | ERRO para gravação, item de validação, frase de exercício e frase de segmento inexistentes |
+| 11 | Identificador duplicado | `test_11_identificadores_duplicados`, `test_11b_*`, `test_11c_*` | ERRO para frase e gravação duplicadas, ID de gravação incoerente com a tomada e formato inválido |
+| 12 | Duas gravações ativas na mesma faixa e velocidade | `test_12_duas_gravacoes_ativas_mesma_faixa_e_velocidade` | ERRO `MAIS_DE_UM_ATIVO` |
+| 13 | Gravação com roteiro desatualizado | `test_13_gravacao_com_roteiro_desatualizado`, `test_13b_gravacao_futura_e_erro` | as 2 gravações ficam desatualizadas, o código é 2, os exercícios de escuta ficam bloqueados e o de múltipla escolha continua aprovado; versão de roteiro futura é ERRO |
+| 14 | Exercício sem resposta correta | `test_14_exercicio_sem_resposta_correta` | ERRO `SEM_RESPOSTA_CORRETA`; a `PEDAGOGICA` perde a vigência |
+| 15 | Validação antiga após mudança de dependência | `test_15_validacao_antiga_nao_continua_aprovada`, `test_15b_reverter_conteudo_reativa_validacao_antiga_com_aviso` | a validação antiga fica no arquivo, mas não vale; o exercício perde a aprovação; uma nova validação restaura o código 0. Se o conteúdo volta ao anterior, a validação antiga volta a valer, com aviso |
+
+Casos válidos: `test_estado_aprovado_sem_achados`, `test_csvs_oficiais_vazios_sao_validos`, `test_05b_ordem_das_linhas_no_csv_nao_importa`, `test_atualizar_impressoes_nao_muda_nada_no_estado_aprovado`, `test_08_fixo_mantem_gravacao_quando_outra_vira_ativa`, `Apontamentos.test_valido`, `Apontamentos.test_registro_oficial_e_valido`.
+
+Outras classes:
+- `RevisoresEValidacoes`: aprovação de IA como auxiliar e competência por dimensão.
+- `EstruturaEArquivos` e `CodigosRestantes`: cabeçalho, BOM, CRLF, listas, capítulos, retiradas, velocidades, bytes de áudio, roteiro não fechado e demais códigos.
+- `LinhaDeComando`: códigos de saída 0/1/2/3, `impressao-validacao` e JSON.
+- `Apontamentos`: regras do protocolo.
+- `CoberturaDosCodigos`: falha se algum código de achado do verificador não aparece em nenhum teste.
+- `Originais`: integridade dos 4 arquivos originais. É pulado fora de um repositório git; por isso é pulado dentro das cópias temporárias do teste de mutação.
+
+### A3. Teste de mutação
+
+`mutacoes.py` primeiro roda a suíte numa cópia sem mutação (controle) e só continua se ela passar. Depois introduz, uma de cada vez, 15 defeitos no verificador e exige que a suíte falhe em cada um.
+
+Duas lições da construção desse teste ficaram registradas:
+- Retirar o campo `ordem` de dentro do registro do segmento é uma mutação **equivalente**: os segmentos já são ordenados antes do cálculo. Ela foi trocada por "não ordenar os segmentos", que só o `test_05b` detecta.
+- Sem a cópia de `03_revisao/`, o teste do registro oficial de apontamentos falhava em toda mutação, e todas pareciam detectadas por engano. A execução de controle impede isso.
+
+### A4. O que a Parte A não verifica
+
+- A qualidade do conteúdo: o verificador confere a existência e a vigência de validações humanas, não se o japonês, a tradução ou a pedagogia estão bons.
+- Arquivos MP3 reais: os testes usam bytes fictícios.
+- O caminho de falha de `verificar_originais.py` (só o de sucesso é testado).
+- Desempenho com volumes grandes de dados.
+
+### A5. Execuções registradas
+
+Os resultados de cada execução, com o commit exato, estão em `03_revisao/RELATORIO_FINAL_CANDIDATO_APROVACAO.md`, seção "Resultados".
+
+## Parte B · Teste de fumaça HTML (`teste-html-smoke.js`, versão 3)
+
+Um resultado "sem falhas" significa só que os itens da primeira tabela passaram. Ele não diz que o material está correto.
+
+### Reação observável não é funcionamento correto
 
 O teste clica nos botões e registra se **algo mudou** depois do clique: mudança no DOM, chamada de `play()` em áudio, escrita no armazenamento local ou mudança de endereço. Isso se chama **reação observável**.
 
@@ -13,7 +77,7 @@ Os cliques são feitos em sequência, sem recarregar a página, e o estado se ac
 - **desabilitado desde o carregamento**: o botão já estava desabilitado antes de qualquer clique do teste;
 - **desabilitado após interações anteriores**: o botão estava habilitado no carregamento, mas foi desabilitado durante o teste. Isso pode ter sido causado por um clique anterior do próprio teste, como as alternativas bloqueadas depois que uma resposta da mesma questão é escolhida. O teste não registra qual clique causou o bloqueio.
 
-## O que é verificado
+### O que é verificado
 
 | Verificação | Como | Tela | Resultado |
 |---|---|---|---|
@@ -34,7 +98,7 @@ Os cliques são feitos em sequência, sem recarregar a página, e o estado se ac
 
 Botões com termos como "apagar", "reset", "limpar" ou classe `danger` no texto, no `id` ou na classe **não** são clicados, para não apagar dados.
 
-## O que não é verificado
+### O que não é verificado
 
 | Fora da cobertura | Por quê / como cobrir |
 |---|---|
@@ -49,7 +113,7 @@ Botões com termos como "apagar", "reset", "limpar" ou classe `danger` no texto,
 | Persistência após recarregar a página | não implementado |
 | PDF | fora do escopo deste script |
 
-## Execuções registradas
+### Execuções registradas
 
 Só entram aqui execuções que de fato aconteceram, com o SHA completo do que foi testado. Os números das execuções antigas não foram alterados; só a terminologia das linhas de detalhe segue a versão 3.
 
