@@ -25,3 +25,9 @@ python3 colaboracao-ia/05_ferramentas/verificar_dados.py
 ``
 
 O verificador não substitui revisão linguística, pedagógica ou visual. Antes de publicar, revisar o PDF exportado em tela e impressão, página a página.
+
+## Estado verificado em 2026-10-30
+
+A suíte automatizada passou (7/7) após uma correção nos testes. O verificador estrutural também passou, mas os quatro CSVs oficiais permanecem vazios. Isso não valida conteúdo editorial.
+
+O PDF disponível no repositório é uma prova de 8 páginas do Capítulo 4, com duas alternativas de layout e referências provisórias a áudio/QR. Não é o livro final. Consulte `ESTADO.md` e `03_revisao/RELATORIO_EXECUCAO.md` para resultados e limitações. O merge e a publicação seguem pendentes.
