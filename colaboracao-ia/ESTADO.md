@@ -1,27 +1,27 @@
-# Estado da infraestrutura — livro PDF
+# Estado do projeto — livro PDF
 
 Atualizado em 2026-10-30.
 
 ## Escopo oficial
 
-Somente um livro estático em PDF. Não existe áudio, narração, QR code, vídeo, exercício interativo, plataforma, site de aluno, aplicativo, assinatura ou atividade externa ao PDF.
+O Volume 1 será um livro estático em PDF. Não terá áudio, QR codes, vídeo, links para atividade externa, aplicativo, site, plataforma ou interação fora do próprio PDF.
 
-## Implementado nesta rodada
+## Verificações reproduzidas nesta rodada
 
-- Modelo editorial com quatro CSVs: frases, exercícios impressos, respostas e validações.
-- Verificador Python para cabeçalhos, IDs, referências, capítulo, furigana e resposta correta.
-- Testes automatizados focados no modelo PDF-only.
-- Documentação de escopo e critérios de inspeção editorial.
+- Testes Python: 7 de 7 passaram localmente após corrigir o caminho de importação e a escrita de LF no teste. A correção foi registrada nesta branch.
+- Verificador editorial: passou sobre os quatro CSVs oficiais, que seguem vazios. Isso comprova apenas estrutura vazia válida; não há dados editoriais preenchidos para validar.
+- Comparador de originais: não executável no pacote ZIP, pois requer histórico Git e o ambiente não tem Git instalado.
+- Smoke test HTML: não executável; Playwright não está instalado.
+- PDF existente: 8 páginas inspecionadas visualmente. É uma prova de páginas do Capítulo 4 composta por duas alternativas de diagramação. Inclui conteúdo e instruções de áudio/QR e notas técnicas de edição; não é o livro final PDF-only.
 
-## Ainda precisa de implementação/validação
+## Lacunas que impedem concluir o livro
 
-- Executar os testes em clone limpo e corrigir eventuais falhas.
-- Revisar apontamentos anteriores e eliminar referências residuais a áudio/interatividade em documentos históricos ativos.
-- Verificação de conteúdo linguístico por pessoa competente em japonês.
-- Revisão pedagógica do livro completo.
-- Fluxo de diagramação, exportação e inspeção visual do PDF final.
-- Verificar fontes incorporadas, sumário, paginação, links internos e legibilidade em tela/impressão.
+- Não há manuscrito completo. Os CSVs estão vazios; os HTMLs são protótipos e o PDF é apenas uma amostra de páginas do Capítulo 4.
+- Faltam estrutura completa do Volume 1, exemplos editados, traduções PT-BR, exercícios e gabarito do livro todo.
+- A amostra visual tem conteúdo provisório e referências incompatíveis com o escopo PDF-only.
+- Não foi possível executar os verificadores HTML e de comparação de originais neste ambiente.
+- Não existe revisão humana independente de japonês e pedagogia.
 
-## Fora do escopo
+## Situação
 
-Qualquer recurso que não faça parte do PDF estático.
+A infraestrutura teve uma correção de teste verificada. O livro e o PDF final ainda não estão prontos. Não aprovar, publicar ou fazer merge com base neste estado.
