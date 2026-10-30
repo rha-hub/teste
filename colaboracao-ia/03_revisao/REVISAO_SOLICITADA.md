@@ -1,3 +1,5 @@
+> **HISTÓRICO — SUPERADO.** Este documento registra uma rodada anterior e pode conter requisitos de áudio ou arquitetura que não se aplicam mais. A decisão vigente é exclusivamente um livro estático em PDF. Preservado como evidência; não usar como instrução atual.
+
 # Revisão solicitada · Rodada 01
 
 - **Data do pedido:** 2026-10-30
