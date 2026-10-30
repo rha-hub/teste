@@ -10,7 +10,7 @@ O produto solicitado é somente o livro estático em PDF. Áudio, QR codes, víd
 |---|---|
 | Suíte Python | 7/7 passaram após corrigir dois defeitos no próprio teste: importação do verificador e preservação de LF ao escrever CSV no Windows. |
 | Verificador editorial | Sem erros sobre os CSVs oficiais. Os quatro arquivos estão vazios; resultado não representa validação de conteúdo. |
-| Comparador de arquivos originais | Não executado: o download ZIP não contém histórico Git e Git não está instalado no ambiente. |
+| Integridade dos quatro arquivos originais | Os quatro hashes Git blob locais coincidem com os valores esperados. A lista atual de arquivos do PR contém apenas caminhos sob `colaboracao-ia/`. O script `verificar_originais.py` não foi executado porque exige histórico Git, ausente no ZIP. |
 | Smoke test HTML | Não executado: Playwright ausente. |
 | PDF existente | Inspecionadas visualmente 8 páginas. São duas alternativas de páginas-modelo para o Capítulo 4, não um volume completo. A primeira alternativa contém QR/áudio; as páginas também contêm marcas/notas provisórias, incluindo instrução técnica de edição. |
 
