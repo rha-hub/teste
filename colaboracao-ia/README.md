@@ -20,6 +20,7 @@ colaboracao-ia/
 │   ├── audios.csv                ← faixas lógicas de áudio
 │   ├── audio_segmentos.csv       ← roteiro de cada faixa lógica
 │   ├── arquivos_audio.csv        ← gravações produzidas (velocidade, versão, tomada)
+│   ├── exercicio_audios.csv      ← qual áudio cada exercício usa (gravação fixa ou ativa)
 │   └── validacoes.csv
 ├── 02_testes/
 │   ├── teste-html-smoke.js       ← teste Playwright para materiais HTML

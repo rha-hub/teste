@@ -10,10 +10,31 @@ Formato: data · versão (commit) · autor · o que mudou · por quê. Entradas 
 | 1 | `e822d76fb83aced40c840e5915780ef412c0cd35` | primeira versão da pasta `colaboracao-ia/` (7 arquivos) | examinado na **1ª revisão** do ChatGPT (presumido: era o único commit da branch) |
 | 2 | `b94d020516d1fb0e43620225622fb592ee133dcf` | correções dos pontos P01–P06 e CL-01 | material examinado na **2ª revisão** |
 | 3 | `cd08f0da92f994157fb1a55f2fb9080924dd427f` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA.md`, que cita o commit 2 | head da branch durante a 2ª revisão (presumido); não altera material |
-| 4 | registrado em `03_revisao/NOVA_REVISAO_SOLICITADA_2.md` | correções dos pontos P07–P12 | material a examinar na **3ª revisão** |
-| 5 | registrado no comentário do PR #1 | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_2.md` | não altera material |
+| 4 | `81c3479233768db7a5760d70790ca1f7096c071d` | correções dos pontos P07–P12 | material examinado na **3ª revisão** (P07, P09–P12 aprovados; P08 com ajuste pedido) |
+| 5 | `31cccb55fae8d17e0ef902826c13c4d3c08ad1bb` | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_2.md`, que cita o commit 4 | head da branch durante a 3ª revisão (presumido); não altera material |
+| 6 | registrado em `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | correções dos pontos P13–P15 (fecha o ajuste de P08) | material a examinar na **4ª revisão** |
+| 7 | registrado no comentário do PR #1 | só acrescenta `03_revisao/NOVA_REVISAO_SOLICITADA_3.md` | não altera material |
 
 Os SHAs históricos acima não mudam: nenhum commit foi reescrito (sem rebase, sem force push).
+
+## 2026-10-30 · correções da 3ª revisão (P13–P15) · Claude (com autorização do responsável humano)
+
+Commit anterior: `31cccb55fae8d17e0ef902826c13c4d3c08ad1bb`. Resposta em `03_revisao/RESPOSTA_CLAUDE_3.md`.
+
+**Criado**
+- `01_dados/exercicio_audios.csv`: qual faixa, em qual velocidade e com qual modo de seleção (`ATIVO` ou `FIXO`) cada exercício usa (só cabeçalho).
+- `03_revisao/RESPOSTA_CLAUDE_3.md`.
+
+**Alterado**
+- `01_dados/ESQUEMA.md`: esquema v4. Inclui a seleção de áudio por exercício; as dimensões `ROTEIRO`, `GRAVACAO` (antes `AUDIO`) e `ESCUTA`; `imp_selecao_audio`; a seção 5.5 (substituição de gravação ativa); as regras 6 a 11 (identificador completo com tomada, unicidade, modos de seleção); e a importação de CSV em planilhas.
+- `01_dados/exercicios.csv`: sem a coluna `audios` (substituída por `exercicio_audios.csv`).
+- `01_dados/validacoes.csv`: nova coluna `arquivos_audio_resolvidos`.
+- `README.md`: `exercicio_audios.csv` na estrutura.
+- `04_historico/CHANGELOG.md`: sequência de commits (linhas 4 e 5 com SHA; 6 e 7 previstas).
+
+**Preservado sem alteração:** os quatro arquivos originais; todos os documentos de revisão anteriores em `03_revisao/`; `02_testes/` (P09 e P10 aprovados).
+
+**Aprovação humana:** pendente.
 
 ## 2026-10-30 · correções da 2ª revisão (P07–P12) · Claude (com autorização do responsável humano)
 
