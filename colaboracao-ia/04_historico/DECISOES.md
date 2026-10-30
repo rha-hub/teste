@@ -1,5 +1,7 @@
 # Decisões do projeto (infraestrutura de colaboração)
 
+**Vigência:** D-008 é a decisão atual de produto. D-002, D-003, D-006 e D-007 foram superadas por ela; a parte de D-005 específica a gravação/roteiro/escuta também foi superada. D-001 (CSVs como fonte) e D-004 (privacidade) continuam aplicáveis. O registro antigo permanece para preservar o histórico.
+
 Registro das decisões do responsável humano. Uma linha por decisão, nunca apagada. Quando uma decisão muda, acrescenta-se uma nova que cita a anterior.
 
 | ID | Data | Decisão | Origem | Onde se aplica |
@@ -12,4 +14,4 @@ Registro das decisões do responsável humano. Uma linha por decisão, nunca apa
 | D-006 | 2026-10-30 | Aplicação de D-005 no verificador, definida pelo executor e sujeita a revisão: aprovação final de `LINGUISTICA`, `TRADUCAO` e `GRAVACAO` só por `HUMANO_JAPONES`; de `PEDAGOGICA`, `ROTEIRO` e `ESCUTA` por `HUMANO_JAPONES` ou `HUMANO_RESPONSAVEL`. Aprovação de IA conta como `APROVADO_AUXILIAR`. Validação humana exige `revisor_identificacao`. | proposta do Claude a partir de D-005; **aguarda confirmação do responsável humano** | `verificar_dados.py` (`APROVADORES_FINAIS`) |
 | D-007 | 2026-10-30 | Áudios comerciais ficam fora do repositório. O verificador confere os bytes com `--raiz-audio` apontando para uma pasta local; sem ela, o conteúdo dos áudios é registrado como não conferido. | consequência de D-004, definida pelo executor | `verificar_dados.py`; `ESQUEMA.md` seção 5.4 |
 
-Nenhuma decisão de merge ou publicação foi registrada até esta data.
+| D-008 | 2026-10-30 | O Volume 1 é exclusivamente um livro estático em PDF. Não produzir áudio, narração, QR codes, vídeo, atividades externas, site, aplicativo, plataforma ou qualquer interação fora do PDF. | instrução escrita do responsável humano nesta conversa | todo o projeto; `README.md`, `PROTOCOLO.md`, `ESTADO.md` |\n\nNenhuma decisão de merge ou publicação foi registrada até esta data.
