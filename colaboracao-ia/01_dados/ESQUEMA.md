@@ -1,8 +1,15 @@
 # Esquema dos dados de rastreabilidade
 
-Versão do esquema: **2** (2026-10-30). Substitui a versão 1, que tinha três CSVs com colunas de status embutidas.
+Versão do esquema: **3** (2026-10-30).
+- Versão 2: commit `b94d020516d1fb0e43620225622fb592ee133dcf`.
+- Versão 1: commit `e822d76fb83aced40c840e5915780ef412c0cd35`.
 
-Este documento define os arquivos de `01_dados/`, como eles se relacionam e como detectar material desatualizado. **As impressões (seção 5) são uma proposta: nenhum script as calcula ainda, e nenhuma deve ser preenchida à mão.** A implementação só começa depois da aprovação do responsável humano.
+Mudanças da versão 3:
+- a faixa lógica de áudio foi separada do arquivo produzido (novo `arquivos_audio.csv`);
+- a seção 5 agora separa dependências linguísticas, pedagógicas, de roteiro e de arquivo;
+- a coluna `imp_dependencias` saiu de `exercicios.csv`.
+
+Este documento define os arquivos de `01_dados/`, como eles se relacionam e como detectar material desatualizado. **As impressões (seção 5) são uma proposta: nenhum script as calcula ainda, e nenhuma deve ser preenchida à mão.** A implementação depende de aprovação do responsável humano.
 
 ## 1. Convenções gerais
 
@@ -28,28 +35,40 @@ Este documento define os arquivos de `01_dados/`, como eles se relacionam e como
 | `frases.csv` | frase ou exemplo japonês | `id_frase` |
 | `exercicios.csv` | item de exercício | `id_exercicio` |
 | `respostas.csv` | resposta possível de um exercício (certa, aceita ou errada) | `id_resposta` |
-| `audios.csv` | arquivo de áudio produzido (uma faixa em uma velocidade) | `id_audio` + `velocidade` |
-| `audio_segmentos.csv` | fala de uma faixa, na ordem do roteiro | `id_audio` + `ordem` |
-| `validacoes.csv` | decisão de um revisor sobre uma faceta de um item (só acrescenta, nunca edita) | `id_validacao` |
+| `audios.csv` | **faixa lógica**: o que é falado, independente de velocidade e de quantas vezes foi gravado | `id_audio` |
+| `audio_segmentos.csv` | fala de uma faixa lógica, na ordem do roteiro | `id_audio` + `ordem` |
+| `arquivos_audio.csv` | **arquivo produzido**: uma gravação de uma faixa, numa velocidade, a partir de uma versão do roteiro | `id_arquivo_audio` |
+| `validacoes.csv` | decisão de um revisor sobre um item, numa das dimensões da seção 5 (só acrescenta, nunca edita) | `id_validacao` |
+
+### Faixa lógica e arquivo de áudio
+
+- `id_audio` (ex.: `A04-03`) identifica **a faixa lógica**: o roteiro (quais frases, em que ordem, com que personagem, voz, forma falada e pausas). É o que o livro, os exercícios e a página do QR citam.
+- O roteiro de uma faixa vive em `audio_segmentos.csv`, com chave `id_audio` + `ordem`. Como `id_audio` é a faixa lógica, cada segmento aponta para uma única faixa, sem ambiguidade. O roteiro é o mesmo para todas as velocidades.
+- Cada gravação é uma linha de `arquivos_audio.csv`, com `id_arquivo_audio` no formato `<id_audio>_v<velocidade>_r<versao_roteiro>_t<tomada>`. Exemplo: `A04-03_v080_r2_t1` é a faixa A04-03, a 80% da velocidade normal, gravada do roteiro versão 2, primeira tomada.
+- A velocidade é escrita como porcentagem da normal com três dígitos (`v100`, `v080`). Esse formato aceita qualquer conjunto de velocidades e não decide quais existirão; essa decisão é do responsável humano (seção 7).
+- Para cada par (`id_audio`, `velocidade`), no máximo um arquivo tem `situacao=ATIVO`. Os anteriores ficam como `SUBSTITUIDO`: o histórico é preservado e não há dúvida sobre qual arquivo está em uso.
 
 ## 3. Relacionamentos
 
 ```
-frases ──< exercicios.frases_usadas (lista)      um exercício usa 1+ frases; uma frase aparece em 0+ exercícios
-exercicios ──< respostas                         cada exercício tem 1+ respostas CORRETA e 0+ ACEITA/ERRADA
-exercicios.audios (lista) >── audios.id_audio    um exercício de escuta usa 1+ faixas
-audios.id_audio ──< audio_segmentos              uma faixa tem 1+ segmentos ordenados
-audio_segmentos.id_frase >── frases              cada segmento fala exatamente uma frase
-validacoes.id_item → qualquer item acima         cada validação se refere a uma faceta de um item
+frases ──< exercicios.frases_usadas (lista)        um exercício usa 1+ frases; uma frase aparece em 0+ exercícios
+exercicios ──< respostas                           cada exercício tem 1+ respostas CORRETA e 0+ ACEITA/ERRADA
+exercicios.audios (lista) >── audios.id_audio      um exercício de escuta cita 1+ faixas lógicas
+audios ──< audio_segmentos                         uma faixa lógica tem 1+ segmentos ordenados
+audio_segmentos.id_frase >── frases                cada segmento fala exatamente uma frase
+audios ──< arquivos_audio                          uma faixa lógica tem 0+ arquivos (velocidades, versões, tomadas)
+validacoes.id_item → frase, exercício, faixa ou arquivo
 ```
 
 Regras de integridade que o futuro script vai checar:
 
-1. Todo ID citado em `frases_usadas`, `audios`, `audio_segmentos.id_frase` e `validacoes.id_item` existe no arquivo de origem.
+1. Todo ID citado em `frases_usadas`, `audios`, `audio_segmentos.id_frase`, `arquivos_audio.id_audio` e `validacoes.id_item` existe no arquivo de origem.
 2. Todo exercício ativo tem pelo menos uma resposta `CORRETA` ativa.
-3. Toda faixa citada em `audios.csv` tem segmentos; `ordem` começa em 1, sem buracos.
+3. Toda faixa lógica ativa tem segmentos; `ordem` começa em 1, sem buracos.
 4. Um item `RETIRADA` não é citado por nenhum item ativo.
 5. Um exercício só usa frases cujo capítulo é igual ou anterior ao dele.
+6. `id_arquivo_audio` é coerente com as colunas `id_audio`, `velocidade` e `versao_roteiro` da mesma linha.
+7. No máximo um arquivo `ATIVO` por (`id_audio`, `velocidade`).
 
 ### Respostas alternativas
 
@@ -86,75 +105,102 @@ Em exercícios de escrita, `exercicios.regra_comparacao` diz como a resposta do 
 | `observacoes` | — | texto livre |
 
 ### exercicios.csv
-`id_exercicio` (`X04-R1`) · `capitulo` · `licao` · `degrau` (`RECONHECER`, `ESCREVER`, `ESCOLHER_TOM`) · `tipo` (`MULTIPLA_ESCOLHA`, `ESCRITA`, `ESCUTA`) · `enunciado` · `frases_usadas` (lista) · `audios` (lista, vazia se não há áudio) · `secao_que_ensina` · `regra_comparacao` · `versao` · `imp_exercicio` · `imp_dependencias` · `situacao` · `observacoes`
+`id_exercicio` (`X04-R1`) · `capitulo` · `licao` · `degrau` (`RECONHECER`, `ESCREVER`, `ESCOLHER_TOM`) · `tipo` (`MULTIPLA_ESCOLHA`, `ESCRITA`, `ESCUTA`) · `enunciado` · `frases_usadas` (lista) · `audios` (lista de faixas lógicas, vazia se não há áudio) · `secao_que_ensina` · `regra_comparacao` · `versao` · `imp_exercicio` · `situacao` · `observacoes`
 
 ### respostas.csv
 `id_resposta` (`X04-R1-a`) · `id_exercicio` · `rotulo` (letra exibida, vazia em escrita) · `texto` · `tipo` (`CORRETA`, `ACEITA`, `ERRADA`) · `explicacao` · `versao` · `imp_resposta` · `situacao` · `observacoes`
 
-### audios.csv
-`id_audio` (`A04-03`) · `velocidade` (valores ainda não decididos; ver seção 7) · `capitulo` · `descricao` · `versao_roteiro` · `imp_roteiro` · `imp_roteiro_gerado` · `arquivo` (caminho relativo) · `sha256_arquivo` · `gerado_em` · `servico_modelo_voz` · `plano_licenca` · `transcricao_confere` (`SIM`, `NAO`, vazio = não verificado) · `qr_pagina` · `situacao` · `observacoes`
+### audios.csv (faixa lógica)
+`id_audio` (`A04-03`) · `capitulo` · `descricao` · `versao_roteiro` · `imp_roteiro` · `qr_pagina` · `situacao` (`ATIVA`, `RETIRADA`) · `observacoes`
 
-### audio_segmentos.csv
+### audio_segmentos.csv (roteiro da faixa lógica)
 `id_audio` · `ordem` (1, 2, 3…) · `id_frase` · `forma_falada` (`COMPLETA` ou `REDUZIDA`) · `personagem` · `voz` · `pausa_depois_ms` · `imp_japones_usada` (a `imp_japones` da frase no momento em que o roteiro foi fechado)
 
+### arquivos_audio.csv (arquivo produzido)
+`id_arquivo_audio` (`A04-03_v080_r2_t1`) · `id_audio` · `velocidade` (`100`, `080`…) · `versao_roteiro` (versão usada na gravação) · `tomada` · `imp_roteiro_gerado` (a `imp_roteiro` da faixa no momento da gravação) · `arquivo` (caminho relativo) · `sha256_arquivo` · `gerado_em` · `servico_modelo_voz` · `plano_licenca` · `transcricao_confere` (`SIM`, `NAO`, vazio = não verificado) · `situacao` (`ATIVO`, `SUBSTITUIDO`, `RETIRADO`) · `observacoes`
+
 ### validacoes.csv
-`id_validacao` (`V-0001`, sequencial) · `data` · `id_item` · `faceta` · `imp_validada` · `status` (`APROVADO`, `AJUSTAR`, `NAO_USAR`, `PENDENTE_DE_VALIDACAO`) · `revisor` (`CHATGPT`, `REVISOR_NATIVO`, `CLAUDE`, `RESPONSAVEL_HUMANO`) · `commit_revisado` (40 caracteres) · `apontamento` (ex. `C04-LING-001`) · `observacoes`
+`id_validacao` (`V-0001`, sequencial) · `data` · `id_item` · `dimensao` (seção 5) · `imp_validada` (a impressão de dependência da dimensão, no momento da decisão) · `status` (`APROVADO`, `AJUSTAR`, `NAO_USAR`, `PENDENTE_DE_VALIDACAO`) · `revisor` (`CHATGPT`, `REVISOR_NATIVO`, `CLAUDE`, `RESPONSAVEL_HUMANO`) · `commit_revisado` (40 caracteres) · `apontamento` (ex. `C04-LING-001`) · `observacoes`
 
-O status de um item **não** fica guardado na linha do item: ele é a validação mais recente daquela faceta **cuja impressão ainda bate com a atual**. Se o texto mudou depois da validação, a validação perde efeito sozinha e o item volta a ficar sem status válido. Isso impede que uma aprovação antiga "cubra" um texto novo.
+O status de um item **não** fica guardado na linha do item. Ele é a validação mais recente daquela dimensão **cuja impressão ainda bate com a atual**. Se alguma dependência mudou depois da validação, ela perde efeito sozinha. Assim, uma aprovação antiga não cobre material novo.
 
-## 5. Impressões SHA-256 (proposta, não implementada)
+## 5. Impressões SHA-256 e dependências (proposta, não implementada)
 
-### Facetas: o que muda e o que isso afeta
+### 5.1 Impressões de conteúdo (uma por faceta)
 
-| Faceta | Campos que entram no cálculo | Quando muda, fica desatualizado |
+Cada impressão cobre só os campos da própria faceta:
+
+| Impressão | Item | Campos |
 |---|---|---|
-| `japones` (frase) | `forma_completa`, `forma_reduzida` | roteiro e áudio das faixas que falam a frase; exercícios que usam a frase; validações linguísticas da frase |
-| `traducao` (frase) | `traducao_ptbr` | validação de tradução da frase; exercícios que usam a frase (revisão pedagógica, não áudio) |
-| `explicacao` (frase) | `reducao`, `registro`, `explicacao_curta` | validação pedagógica da frase; exercícios `ESCOLHER_TOM` que usam a frase |
-| `exercicio` | `tipo`, `enunciado`, `frases_usadas`, `audios`, `regra_comparacao` | respostas do exercício; validação pedagógica do exercício |
-| `resposta` | `tipo`, `texto`, `explicacao` | validação da resposta |
-| `roteiro` (faixa) | segmentos em ordem: `ordem`, `id_frase`, `forma_falada`, `personagem`, `voz`, `pausa_depois_ms` + a `imp_japones` atual de cada frase | todos os arquivos produzidos dessa faixa |
-| `audio` (arquivo) | os bytes do MP3 | transcrição e validação daquele arquivo |
+| `imp_japones` | frase | `forma_completa`, `forma_reduzida` (com furigana) |
+| `imp_traducao` | frase | `traducao_ptbr` |
+| `imp_explicacao` | frase | `reducao`, `registro`, `explicacao_curta` |
+| `imp_exercicio` | exercício | `tipo`, `enunciado`, `frases_usadas`, `audios`, `regra_comparacao` |
+| `imp_resposta` | resposta | `tipo`, `texto`, `explicacao` |
+| `imp_roteiro` | faixa lógica | segmentos em ordem (`ordem`, `id_frase`, `forma_falada`, `personagem`, `voz`, `pausa_depois_ms`) + a `imp_japones` atual de cada frase falada |
+| `sha256_arquivo` | arquivo de áudio | os bytes do arquivo |
 
-A tradução fica fora do cálculo do áudio de propósito: corrigir uma tradução não deve exigir regravar o áudio.
+`imp_roteiro` inclui o japonês das frases, mas **não** inclui tradução nem explicação. Por isso, uma mudança de tradução ou explicação nunca torna uma gravação desatualizada.
 
-### Cálculo
+### 5.2 Dependências por dimensão de validação
+
+Cada validação é feita numa **dimensão**. A dimensão define de quais impressões a decisão depende. A `imp_validada` é o SHA-256 dessas impressões, na ordem da tabela.
+
+| Dimensão | Item | Depende de | Invalidada por mudança em |
+|---|---|---|---|
+| `LINGUISTICA` | frase | `imp_japones` | japonês da frase |
+| `TRADUCAO` | frase | `imp_japones`, `imp_traducao` | japonês ou tradução da frase |
+| `PEDAGOGICA` | frase | `imp_japones`, `imp_traducao`, `imp_explicacao` | japonês, tradução ou explicação da frase |
+| `PEDAGOGICA` | exercício | `imp_exercicio` + `imp_resposta` de todas as respostas ativas + `imp_japones`, `imp_traducao`, `imp_explicacao` de cada frase usada + `imp_roteiro` de cada faixa citada | exercício, respostas, qualquer faceta das frases usadas, roteiro das faixas citadas |
+| `ROTEIRO` | faixa lógica | `imp_roteiro` | segmentos ou japonês das frases faladas |
+| `AUDIO` | arquivo | `sha256_arquivo`, `imp_roteiro_gerado` | os bytes do arquivo (troca não registrada) |
+
+Separadamente da validação, um **arquivo de áudio está desatualizado** quando o `imp_roteiro` atual da faixa é diferente do `imp_roteiro_gerado` do arquivo. Isso só acontece por mudança no roteiro ou no japonês das frases faladas.
+
+Exemplos:
+
+| Mudança | Validações invalidadas | Gravação desatualizada? |
+|---|---|---|
+| Tradução de `J04-07` | `TRADUCAO` e `PEDAGOGICA` de `J04-07`; `PEDAGOGICA` dos exercícios que usam `J04-07` | **não** |
+| Explicação de `J04-07` | `PEDAGOGICA` de `J04-07` e dos exercícios que a usam | **não** |
+| Japonês de `J04-07` (incluindo leitura do furigana) | todas as de `J04-07`; `ROTEIRO` das faixas que a falam; `PEDAGOGICA` dos exercícios que a usam ou que citam essas faixas | **sim**, nas faixas que falam `J04-07` |
+| Voz de um segmento de `A04-03` | `ROTEIRO` de `A04-03`; `PEDAGOGICA` dos exercícios que citam `A04-03` | **sim**, todos os arquivos de `A04-03` |
+| Uma resposta aceita nova em `X04-R1` | `PEDAGOGICA` de `X04-R1` | não se aplica |
+
+### 5.3 Cálculo
 
 1. Cada campo de texto é normalizado: Unicode NFC, quebras de linha CRLF → LF, espaços removidos no início e no fim.
-2. Listas de IDs sem ordem (`frases_usadas`, `audios`) são ordenadas; segmentos de áudio seguem `ordem`.
-3. A entrada do hash é: `imp-v1`, o nome da faceta e os campos, nessa ordem, separados pelo caractere U+001F (separador de unidade), que não aparece em texto comum. Isso evita que `ab` + `c` e `a` + `bc` deem o mesmo resultado.
+2. Listas de IDs sem ordem (`frases_usadas`, `audios`, respostas de um exercício) são ordenadas por ID. Segmentos de áudio seguem `ordem`.
+3. A entrada do hash é: `imp-v1`, o nome da impressão ou dimensão e os valores, nessa ordem, separados pelo caractere U+001F (separador de unidade). Esse caractere não aparece em texto comum, e assim `ab` + `c` e `a` + `bc` não dão o mesmo resultado. Itens dependentes entram como `id:impressão`.
 4. Aplica-se SHA-256 e guarda-se o hexadecimal completo (64 caracteres). Relatórios podem mostrar só os 12 primeiros.
-5. `imp_dependencias` de um exercício = SHA-256 de `imp-v1` + `dep` + a lista ordenada `id:imp_japones` das frases usadas + a lista `id:imp_roteiro` das faixas usadas.
-6. `sha256_arquivo` = SHA-256 dos bytes do arquivo de áudio.
+5. Se a regra mudar, o prefixo vira `imp-v2` e todas as impressões são recalculadas no mesmo commit.
 
-Se a regra de cálculo mudar, o prefixo muda para `imp-v2`, e todas as impressões são recalculadas no mesmo commit.
+### 5.4 Verificações que o script fará
 
-### Verificações que o script fará
-
-| Situação detectada | Diagnóstico |
+| Situação | Diagnóstico |
 |---|---|
-| `imp_japones` atual de uma frase ≠ `imp_japones_usada` em um segmento | o roteiro daquela faixa está desatualizado e diz qual frase mudou |
-| `imp_roteiro` atual ≠ `imp_roteiro_gerado` de um arquivo | o áudio precisa ser gerado de novo |
+| `imp_japones` atual de uma frase ≠ `imp_japones_usada` num segmento | roteiro da faixa desatualizado; o relatório diz qual frase mudou |
+| `imp_roteiro` atual ≠ `imp_roteiro_gerado` de um arquivo `ATIVO` | a gravação precisa ser refeita |
 | SHA-256 do arquivo em disco ≠ `sha256_arquivo` | o arquivo foi trocado sem registro |
-| `imp_dependencias` recalculada ≠ a gravada | o exercício e suas respostas precisam de nova revisão |
-| `imp_validada` ≠ impressão atual da faceta | a validação não vale mais para o texto atual |
+| `imp_validada` ≠ impressão de dependência recalculada | a validação não vale mais; o relatório lista as dependências que mudaram |
+| Regra de integridade da seção 3 violada | erro de dados |
 
 O script só **relata**. Ele não altera textos, não gera áudio e não muda status.
 
 ## 6. O que distingue cada tipo de alteração
 
-| Alteração | Como fica registrada |
-|---|---|
-| Texto japonês | sobe `versao_japones`; muda `imp_japones`; dispara a revisão de roteiro, áudio e exercícios dependentes |
-| Tradução | sobe `versao_traducao`; muda `imp_traducao`; não dispara áudio |
-| Explicação pedagógica | sobe `versao_explicacao`; muda `imp_explicacao`; não dispara áudio |
-| Roteiro (ordem, voz, pausa, forma falada) | sobe `versao_roteiro`; muda `imp_roteiro`; todos os arquivos da faixa ficam desatualizados |
-| Áudio produzido | nova linha ou novo `sha256_arquivo` + `imp_roteiro_gerado` + `gerado_em` |
+| Alteração | Como fica registrada | Efeito |
+|---|---|---|
+| Texto japonês | sobe `versao_japones`; muda `imp_japones` | invalida validações linguísticas, de tradução e pedagógicas; desatualiza roteiro e gravações das faixas que falam a frase |
+| Tradução | sobe `versao_traducao`; muda `imp_traducao` | invalida validações de tradução e pedagógicas; **não** afeta gravação |
+| Explicação pedagógica | sobe `versao_explicacao`; muda `imp_explicacao` | invalida validações pedagógicas; **não** afeta gravação |
+| Roteiro (ordem, voz, pausa, forma falada) | sobe `versao_roteiro`; muda `imp_roteiro` | invalida validação de roteiro e pedagógica dos exercícios que citam a faixa; desatualiza todos os arquivos da faixa |
+| Áudio produzido | nova linha em `arquivos_audio.csv`; a anterior vira `SUBSTITUIDO` | nova validação `AUDIO` necessária para o arquivo novo |
 
 Toda alteração entra num commit cuja mensagem cita os IDs afetados, e as importantes também entram no `04_historico/CHANGELOG.md`.
 
 ## 7. Decisões pendentes do responsável humano
 
-- Valores de `velocidade` (hoje há três especificações diferentes no projeto).
+- Quais velocidades existirão (o formato `v<porcentagem>` aceita qualquer escolha).
 - Se estes CSVs são a fonte oficial ou uma cópia de outra fonte (por exemplo, Google Sheets).
 - Se os dados dos capítulos podem ficar neste repositório, que é público.

@@ -17,8 +17,9 @@ colaboracao-ia/
 │   ├── frases.csv
 │   ├── exercicios.csv
 │   ├── respostas.csv
-│   ├── audios.csv
-│   ├── audio_segmentos.csv
+│   ├── audios.csv                ← faixas lógicas de áudio
+│   ├── audio_segmentos.csv       ← roteiro de cada faixa lógica
+│   ├── arquivos_audio.csv        ← gravações produzidas (velocidade, versão, tomada)
 │   └── validacoes.csv
 ├── 02_testes/
 │   ├── teste-html-smoke.js       ← teste Playwright para materiais HTML
@@ -54,6 +55,8 @@ A revisão avalia: gramática do japonês; naturalidade e adequação ao context
 **Fase E · Nova revisão.** Depois das correções, Claude registra a nova versão e cria `03_revisao/NOVA_REVISAO_SOLICITADA.md`, listando apontamentos corrigidos e pendentes. O ChatGPT verifica cada correção e procura problemas novos.
 
 **Fase F · Aprovação.** Uma versão só fica pronta para publicação quando os apontamentos relevantes estão resolvidos e o responsável humano aprova por escrito no `CHANGELOG.md`.
+
+Dentro de uma rodada, as fases D e E podem se repetir. Cada repetição ganha um sufixo numérico (`RESPOSTA_CLAUDE_2.md`, `NOVA_REVISAO_SOLICITADA_2.md`, `RELATORIO_CHATGPT_2.md`…), e os arquivos anteriores nunca são sobrescritos.
 
 Ao fim de cada rodada, os arquivos de `03_revisao/` são movidos para `03_revisao/rodada-NN/` (NN = 01, 02…), para que a rodada seguinte comece limpa e o histórico fique completo.
 

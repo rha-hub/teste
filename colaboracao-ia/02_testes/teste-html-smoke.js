@@ -19,7 +19,7 @@ const crypto = require('crypto');
 const { pathToFileURL } = require('url');
 const { execFileSync } = require('child_process');
 
-const VERSAO_SCRIPT = '2';
+const VERSAO_SCRIPT = '3';
 const VIEWPORTS = [
   { nome: 'desktop', width: 1280, height: 900 },
   { nome: 'celular', width: 390, height: 844 },
@@ -53,13 +53,19 @@ function pastaNova(base, alvo) {
 
 function commitGit(arquivo) {
   // SHA completo do commit e do blob do arquivo, se ele estiver num repositório git.
+  // O caminho é calculado em relação à raiz do repositório, para que arquivos em
+  // subpastas (ex.: docs/index.html) sejam encontrados no commit.
+  const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
   try {
-    const dir = path.dirname(arquivo);
-    const commit = execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+    const real = fs.realpathSync(arquivo);
+    const raiz = fs.realpathSync(git(path.dirname(real), 'rev-parse', '--show-toplevel'));
+    const relativo = path.relative(raiz, real).split(path.sep).join('/');
+    if (relativo.startsWith('../') || path.isAbsolute(relativo)) return null;
+    const commit = git(raiz, 'rev-parse', 'HEAD');
     let blob = null;
-    try { blob = execFileSync('git', ['-C', dir, 'rev-parse', `HEAD:./${path.basename(arquivo)}`], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim(); } catch { /* arquivo fora do commit */ }
-    const sujo = execFileSync('git', ['-C', dir, 'status', '--porcelain', '--', path.basename(arquivo)], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim() !== '';
-    return { commit, blob_no_commit: blob, alterado_desde_o_commit: sujo };
+    try { blob = git(raiz, 'rev-parse', `HEAD:${relativo}`); } catch { /* arquivo não está no commit */ }
+    const sujo = git(raiz, 'status', '--porcelain', '--', relativo) !== '';
+    return { raiz_repositorio: raiz, caminho_no_repositorio: relativo, commit, blob_no_commit: blob, alterado_desde_o_commit: sujo };
   } catch { return null; }
 }
 
@@ -136,9 +142,14 @@ function instrumentar() {
       }));
 
       // Interação: um clique por botão visível e habilitado, na ordem do documento, sem recarregar
-      // a página (o estado se acumula). A reação é medida por sinais, não pela aparência.
+      // a página (o estado se acumula). A reação é medida por sinais observáveis.
+      // IMPORTANTE: "reacao_observavel" só diz que algo mudou depois do clique. Não prova que a
+      // função do botão está correta (ex.: que a resposta certa foi marcada como certa).
       const botoes = pg.locator('button');
       const total = await botoes.count();
+      // Estado de cada botão logo após o carregamento, antes de qualquer clique do teste.
+      const desabilitadosNoCarregamento = await pg.evaluate(() => [...document.querySelectorAll('button')]
+        .map((x) => x.disabled || x.getAttribute('aria-disabled') === 'true'));
       const cliques = [];
       for (let i = 0; i < total; i++) {
         const b = botoes.nth(i);
@@ -152,7 +163,12 @@ function instrumentar() {
         const base = { indice: i, rotulo: info.rotulo };
         if (DESTRUTIVO.test(info.marcadores)) { cliques.push({ ...base, resultado: 'nao_testado_destrutivo' }); continue; }
         if (!info.visivel) { cliques.push({ ...base, resultado: 'nao_testado_oculto' }); continue; }
-        if (info.desabilitado) { cliques.push({ ...base, resultado: 'nao_testado_desabilitado' }); continue; }
+        if (info.desabilitado) {
+          // Distingue o botão que já nasceu desabilitado do que foi desabilitado por cliques
+          // anteriores do próprio teste (ex.: alternativas bloqueadas após responder a questão).
+          cliques.push({ ...base, resultado: desabilitadosNoCarregamento[i] ? 'nao_testado_desabilitado_desde_o_carregamento' : 'nao_testado_desabilitado_apos_interacoes_anteriores' });
+          continue;
+        }
         const antes = await pg.evaluate(() => ({ ...window.__qa, url: location.href }));
         try { await b.click({ timeout: 2000 }); } catch (e) { cliques.push({ ...base, resultado: 'clique_falhou', detalhe: e.message.split('\n')[0] }); continue; }
         await pg.waitForTimeout(250);
@@ -162,15 +178,23 @@ function instrumentar() {
         if (depois.plays > antes.plays) sinais.push('audio_play');
         if (depois.armazenamento > antes.armazenamento) sinais.push('armazenamento');
         if (depois.url !== antes.url) sinais.push('navegacao');
-        cliques.push({ ...base, resultado: sinais.length ? 'reagiu' : 'sem_reacao_detectada', sinais });
+        cliques.push({ ...base, resultado: sinais.length ? 'reacao_observavel' : 'sem_reacao_observavel', sinais });
       }
       const conta = (r) => cliques.filter((c) => c.resultado === r).length;
       V.cliques = {
+        interpretacao: 'reacao_observavel = algo mudou após o clique (DOM, play() de áudio, armazenamento ou endereço). '
+          + 'Não prova que a função do botão está correta. Os cliques acumulam estado: um botão desabilitado '
+          + 'após interações anteriores pode ter sido bloqueado pelo próprio teste.',
         resumo: {
-          botoes: total, clicados: cliques.filter((c) => c.resultado === 'reagiu' || c.resultado === 'sem_reacao_detectada').length,
-          reagiram: conta('reagiu'), sem_reacao_detectada: conta('sem_reacao_detectada'),
-          nao_testados_ocultos: conta('nao_testado_oculto'), nao_testados_desabilitados: conta('nao_testado_desabilitado'),
-          nao_testados_destrutivos: conta('nao_testado_destrutivo'), cliques_falhos: conta('clique_falhou'),
+          botoes: total,
+          clicados: conta('reacao_observavel') + conta('sem_reacao_observavel'),
+          com_reacao_observavel: conta('reacao_observavel'),
+          sem_reacao_observavel: conta('sem_reacao_observavel'),
+          nao_testados_ocultos: conta('nao_testado_oculto'),
+          nao_testados_desabilitados_desde_o_carregamento: conta('nao_testado_desabilitado_desde_o_carregamento'),
+          nao_testados_desabilitados_apos_interacoes_anteriores: conta('nao_testado_desabilitado_apos_interacoes_anteriores'),
+          nao_testados_destrutivos: conta('nao_testado_destrutivo'),
+          cliques_falhos: conta('clique_falhou'),
         },
         detalhe: cliques,
       };
