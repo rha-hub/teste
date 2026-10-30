@@ -11,7 +11,7 @@ O Volume 1 será um livro estático em PDF. Não terá áudio, QR codes, vídeo,
 - Testes Python: 7 de 7 passaram localmente após corrigir o caminho de importação e a escrita de LF no teste. A correção foi registrada nesta branch.
 - Verificador editorial: passou sobre os quatro CSVs oficiais, que seguem vazios. Isso comprova apenas estrutura vazia válida; não há dados editoriais preenchidos para validar.
 - Os hashes Git blob dos quatro originais coincidem com os valores esperados; a lista atual de arquivos do PR está restrita a `colaboracao-ia/`. O script `verificar_originais.py` em si requer histórico Git e não foi executado.
-- Smoke test HTML: não executável; Playwright não está instalado.
+- Smoke test HTML e capturas JSON: marcados como históricos; fora da suíte PDF-only ativa.
 - PDF existente: 8 páginas inspecionadas visualmente. É uma prova de páginas do Capítulo 4 composta por duas alternativas de diagramação. Inclui conteúdo e instruções de áudio/QR e notas técnicas de edição; não é o livro final PDF-only.
 
 ## Lacunas que impedem concluir o livro
