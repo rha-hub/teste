@@ -15,3 +15,7 @@
 - Resultado reproduzido localmente: 7/7 testes aprovados; verificador dos CSVs vazio sem erros.
 - Inspecionado o PDF do Capítulo 4: 8 páginas em duas versões de layout, com conteúdo provisório e referências a áudio/QR. Não corresponde ao produto final PDF-only.
 - Registradas no estado atual as lacunas que impedem concluir o livro e as verificações não executáveis neste ambiente.
+
+- Decisão D-008 registrada como escopo vigente PDF-only; decisões de gravação/áudio anteriores marcadas como superadas, sem apagar o histórico.
+- Smoke test de protótipos HTML e capturas associados identificados como legado, fora dos testes ativos.
+- Materiais originais preservados e apontamentos antigos identificados como históricos.
