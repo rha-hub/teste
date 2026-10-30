@@ -11,14 +11,19 @@ Esta pasta é o canal de trabalho entre **Claude** (produção e organização),
 ```
 colaboracao-ia/
 ├── README.md                     ← este protocolo
+├── .gitignore                    ← impede versionar resultados locais de teste
 ├── 01_dados/                     ← registro de rastreabilidade (CSV, UTF-8)
+│   ├── ESQUEMA.md                ← colunas, relacionamentos, impressões
 │   ├── frases.csv
 │   ├── exercicios.csv
-│   └── audios.csv
+│   ├── respostas.csv
+│   ├── audios.csv
+│   ├── audio_segmentos.csv
+│   └── validacoes.csv
 ├── 02_testes/
-│   └── teste-html-smoke.js       ← teste Playwright para materiais HTML
+│   ├── teste-html-smoke.js       ← teste Playwright para materiais HTML
+│   └── COBERTURA.md              ← o que o teste cobre e o que não cobre
 ├── 03_revisao/                   ← pedidos de revisão, relatórios e respostas
-│   └── REVISAO_SOLICITADA.md
 └── 04_historico/
     └── CHANGELOG.md              ← o que mudou, quando e por quê
 ```
@@ -84,11 +89,25 @@ Uma frase não é dada como validada só porque parece plausível.
 
 1. Um ID de apontamento nunca é reutilizado, nem depois de resolvido.
 2. Um apontamento só é marcado como resolvido depois que a alteração correspondente é conferida no arquivo, com o commit indicado.
-3. Toda rodada registra: data, versão (commit) e lista exata de arquivos examinados.
-4. Mudanças importantes entram em `04_historico/CHANGELOG.md`.
+3. Todo pedido de revisão, relatório e resposta começa com o **cabeçalho de versão** (abaixo), com SHAs completos de 40 caracteres, nunca abreviados.
+4. Mudanças importantes entram em `04_historico/CHANGELOG.md`, com o SHA completo do commit.
 5. Arquivos originais são preservados sempre que possível; correções geram uma nova versão.
-6. Quando uma frase muda, quem muda lista o que depende dela: exercícios (`exercicios.csv` → `frases_usadas`), áudios (`audios.csv` → `frases`) e páginas diagramadas.
-7. Resultados de testes só são registrados se o teste foi de fato executado; o registro diz quando, sobre qual arquivo e com qual saída.
+6. Quando uma frase muda, quem muda lista o que depende dela: exercícios (`exercicios.csv` → `frases_usadas`), segmentos de áudio (`audio_segmentos.csv` → `id_frase`) e páginas diagramadas. O tipo de alteração (japonês, tradução, explicação, roteiro, áudio) é registrado como define `01_dados/ESQUEMA.md`, seção 6.
+7. Resultados de testes só são registrados se o teste foi de fato executado; o registro diz quando, sobre qual arquivo (com SHA-256 e commit) e com qual saída.
+
+### Cabeçalho de versão
+
+```
+Repositório: rha-hub/teste
+Branch revisada: <nome>
+Commit revisado: <SHA completo, 40 caracteres>
+Commit base (main): <SHA completo, 40 caracteres>
+Data e hora: <ISO 8601 com fuso>
+Arquivos examinados (blob SHA de cada um, obtido com `git ls-tree <commit> <caminho>`):
+| Arquivo | Blob SHA |
+```
+
+Um documento não pode conter o SHA do commit que o cria. Por isso, o pedido de revisão cita o commit que contém o material a revisar, e o próprio pedido entra num commit separado, logo depois.
 
 ## IDs dos materiais
 
@@ -97,35 +116,31 @@ Uma frase não é dada como validada só porque parece plausível.
 | Frase ou exemplo | `J<cap>-<nº>` | `J04-14` |
 | Faixa de áudio | `A<cap>-<nº>` | `A04-03` |
 | Exercício | `X<cap>-<rótulo>` | `X04-R1` |
-| Cartão de revisão | `C<cap>-<nº>` | `C04-07` |
+| Resposta de exercício | `X<cap>-<rótulo>-<letra ou nº>` | `X04-R1-a` |
+| Cartão de revisão | `K<cap>-<nº>` | `K04-07` |
+| Validação | `V-<nº>` | `V-0001` |
 
-IDs de materiais também nunca são reutilizados. Uma frase removida fica no CSV com status `RETIRADA`.
+Cartões usam `K` (e não `C`) para não serem confundidos com os IDs de apontamento, que começam com `C<capítulo>`.
 
-## Marcas de integridade (impressões)
+IDs de materiais também nunca são reutilizados. Um item removido fica no CSV com `situacao=RETIRADA`.
 
-As colunas `impressao_texto` (em `frases.csv`) e `impressao_roteiro` (em `audios.csv`) servem para descobrir material desatualizado.
+## Dados e impressões
 
-**Como é calculada (definição proposta):**
+Colunas, relacionamentos entre frases, exercícios, respostas e áudios, listas de IDs, respostas alternativas e a proposta de impressões SHA-256 estão em [`01_dados/ESQUEMA.md`](01_dados/ESQUEMA.md).
 
-1. Juntar, nesta ordem e separados por uma quebra de linha (`\n`), os campos `forma_completa`, `forma_reduzida` e `furigana` da frase.
-2. Normalizar o texto em Unicode NFC e codificar em UTF-8.
-3. Calcular SHA-256 e guardar os 12 primeiros caracteres hexadecimais.
-
-**Como é usada:** quando um áudio é gerado, a impressão de cada frase falada é copiada para `impressao_roteiro` (lista na mesma ordem de `frases`). Se depois a impressão atual da frase for diferente da guardada, o áudio está desatualizado.
-
-**Estado atual:** os CSVs ainda só têm cabeçalhos, e o script que calcula e compara as impressões **ainda não existe**. Nenhuma impressão foi calculada até agora.
+**Estado atual:** os CSVs só têm cabeçalhos, e o script que calcula e compara as impressões **ainda não existe**. Nenhuma impressão foi calculada. A implementação depende de aprovação.
 
 ## Testes
 
-`02_testes/teste-html-smoke.js` abre um arquivo HTML no Chromium (Playwright) em 1280 px e 390 px e verifica erros de carregamento, rolagem lateral, nomes acessíveis, imagens sem texto alternativo, links internos e reação dos botões ao clique. Ele não altera o arquivo testado. Grava `report.json` e capturas de tela na pasta de onde é executado.
+`02_testes/teste-html-smoke.js` abre um arquivo HTML no Chromium (Playwright) em 1280 px e 390 px. O que ele cobre e o que fica de fora está em [`02_testes/COBERTURA.md`](02_testes/COBERTURA.md), junto com as execuções já feitas.
 
 ```
 npm install playwright
 npx playwright install chromium
-node teste-html-smoke.js caminho/do/arquivo.html
+node 02_testes/teste-html-smoke.js "caminho/do/arquivo.html" [--saida pasta]
 ```
 
-Limitação conhecida: o script não sabe as respostas certas dos exercícios, então não testa se o feedback de acerto e erro está correto. Isso exige uma versão guiada por `exercicios.csv`.
+Cada execução cria uma pasta nova em `02_testes/resultados/` (ou na pasta de `--saida`), nomeada com data, hora e arquivo testado; nada é sobrescrito. O relatório inclui o SHA-256 do arquivo testado e, se ele estiver num repositório git, o SHA completo do commit. Essa pasta não é versionada (`.gitignore`); quando um resultado é citado numa revisão, o `relatorio.json` correspondente é copiado para `03_revisao/`.
 
 ## Limites deste primeiro teste
 

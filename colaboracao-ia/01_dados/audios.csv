@@ -1,1 +1,1 @@
-id_audio,velocidade,frases,personagens_e_vozes,roteiro_versao,impressao_roteiro,arquivo,gerado_em,servico_e_plano,transcricao_confere,qr_pagina,status,pendencias
+id_audio,velocidade,capitulo,descricao,versao_roteiro,imp_roteiro,imp_roteiro_gerado,arquivo,sha256_arquivo,gerado_em,servico_modelo_voz,plano_licenca,transcricao_confere,qr_pagina,situacao,observacoes

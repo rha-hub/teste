@@ -1,1 +1,1 @@
-id_exercicio,capitulo,licao,degrau,enunciado,frases_usadas,secao_que_ensina,resposta_principal,respostas_aceitas,explicacao_gabarito,audio,versao,status_linguistico,status_pedagogico,status_editorial,pendencias
+id_exercicio,capitulo,licao,degrau,tipo,enunciado,frases_usadas,audios,secao_que_ensina,regra_comparacao,versao,imp_exercicio,imp_dependencias,situacao,observacoes
