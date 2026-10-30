@@ -16,12 +16,12 @@ SCHEMA = {
  "validacoes.csv": ["id_validacao","data","id_item","dimensao","imp_validada","status","revisor","revisor_identificacao","commit_revisado","apontamento","observacoes"],
 }
 PATTERNS = {
- "frase": re.compile(r"^J(\\d{2})-\\d{2,3}$"),
- "exercicio": re.compile(r"^X(\\d{2})-[A-Za-z0-9]+$"),
- "resposta": re.compile(r"^(X\\d{2}-[A-Za-z0-9]+)-[a-z0-9]+$"),
+ "frase": re.compile(r"^J(\d{2})-\d{2,3}$"),
+ "exercicio": re.compile(r"^X(\d{2})-[A-Za-z0-9]+$"),
+ "resposta": re.compile(r"^(X\d{2}-[A-Za-z0-9]+)-[a-z0-9]+$"),
  "sha": re.compile(r"^[0-9a-f]{64}$"),
  "commit": re.compile(r"^[0-9a-f]{40}$"),
- "data": re.compile(r"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?(Z|[+-]\\d{2}:\\d{2})$"),
+ "data": re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z|[+-]\d{2}:\d{2})$"),
 }
 ENUMS = {
  "registro":{"FORMAL","NEUTRO_POLIDO","CASUAL","RUDE","REGIONAL"},
@@ -37,11 +37,11 @@ ENUMS = {
 FINAL = {"LINGUISTICA":{"HUMANO_JAPONES"},"TRADUCAO":{"HUMANO_JAPONES"},
          "PEDAGOGICA":{"HUMANO_JAPONES","HUMANO_RESPONSAVEL"},
          "EDITORIAL":{"HUMANO_RESPONSAVEL"}}
-FURIGANA = re.compile(r"\\{([^{}|]+)\\|([^{}|]+)\\}")
+FURIGANA = re.compile(r"\{([^{}|]+)\|([^{}|]+)\}")
 
 def digest(name, *values):
-    normalized = [unicodedata.normalize("NFC", str(v).replace("\\r\\n","\\n").replace("\\r","\\n")).strip() for v in values]
-    return hashlib.sha256("\\x1f".join(["book-pdf-v1",name,*normalized]).encode("utf-8")).hexdigest()
+    normalized = [unicodedata.normalize("NFC", str(v).replace("\r\n","\n").replace("\r","\n")).strip() for v in values]
+    return hashlib.sha256("\x1f".join(["book-pdf-v1",name,*normalized]).encode("utf-8")).hexdigest()
 
 def furigana_ok(value):
     return not any(c in FURIGANA.sub("", value) for c in "{}|")
@@ -50,7 +50,7 @@ def load(path, header, errors):
     if not path.exists():
         errors.append(f"ERRO ARQUIVO_AUSENTE: {path.name}"); return []
     raw=path.read_bytes()
-    if raw.startswith(b"\\xef\\xbb\\xbf") or b"\\r" in raw:
+    if raw.startswith(b"\xef\xbb\xbf") or b"\r" in raw:
         errors.append(f"ERRO CODIFICACAO_LINHA: {path.name} deve ser UTF-8 sem BOM e LF")
     try: text=raw.decode("utf-8")
     except UnicodeDecodeError:
