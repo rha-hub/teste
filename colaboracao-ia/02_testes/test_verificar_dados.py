@@ -1,5 +1,7 @@
 import csv, tempfile, unittest
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "05_ferramentas"))
 from verificar_dados import SCHEMA, run, furigana_ok
 
 def write_dataset(root):
@@ -34,7 +36,7 @@ class PDFBookTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             add=write_dataset(Path(d))
             p=Path(d)/"respostas.csv"
-            p.write_text(",".join(SCHEMA["respostas.csv"])+"\n",encoding="utf-8")
+            p.write_bytes((",".join(SCHEMA["respostas.csv"])+"\n").encode("utf-8"))
             errors,_=run(Path(d))
             self.assertTrue(any("SEM_RESPOSTA_CORRETA" in x for x in errors))
     def test_duplicate_phrase_id(self):
