@@ -31,7 +31,7 @@ Este arquivo entra num commit posterior a `be68752…`. O material a revisar é 
 | `colaboracao-ia/04_historico/CHANGELOG.md` | `d2d75d1b8a10d2373c2510ab5e12bf4a385bd6aa` | alterado | rastreabilidade |
 | `colaboracao-ia/README.md` | `2b6ff941c83cd412219dd7f8c95106c8205cc770` | alterado (estrutura) | P13 |
 
-Os demais 18 arquivos da pasta não mudaram desde `31cccb5…`. Entre eles estão `02_testes/` e todos os documentos de revisão anteriores em `03_revisao/`. Arquivos fora de `colaboracao-ia/`: nenhum alterado (`git diff ae55c1a…be68752` só lista caminhos dentro da pasta).
+Os demais 16 arquivos da pasta (23 no total em `be68752…`) não mudaram desde `31cccb5…`. *(Correção: a primeira versão deste pedido, no commit `35c552c4a0e0667e8b7f7e9cfa3ea7bfc16596e1`, dizia "18" por erro de contagem; nenhum outro dado mudou.)* Entre eles estão `02_testes/` e todos os documentos de revisão anteriores em `03_revisao/`. Arquivos fora de `colaboracao-ia/`: nenhum alterado (`git diff ae55c1a…be68752` só lista caminhos dentro da pasta).
 
 ## Onde verificar cada ponto
 
