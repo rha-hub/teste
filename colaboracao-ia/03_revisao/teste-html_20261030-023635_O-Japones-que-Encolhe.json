@@ -1,0 +1,546 @@
+{
+  "script": {
+    "nome": "teste-html-smoke.js",
+    "versao": "3"
+  },
+  "executado_em": "2026-10-30T05:36:35.352Z",
+  "ambiente": {
+    "node": "v22.23.4",
+    "playwright": "1.63.0",
+    "navegador": "chromium"
+  },
+  "alvo": {
+    "caminho": "/home/claude/teste/O Japonês que Encolhe.html",
+    "url": "file:///home/claude/teste/O%20Japon%C3%AAs%20que%20Encolhe.html",
+    "sha256": "4a81cb50622b20dd12725839dbb9d19f26aeb1bf92d0a725e73063dc730f830e",
+    "git": {
+      "raiz_repositorio": "/home/claude/teste",
+      "caminho_no_repositorio": "O Japonês que Encolhe.html",
+      "commit": "cd08f0da92f994157fb1a55f2fb9080924dd427f",
+      "blob_no_commit": "e9ba45b4fb3c00074f6ec80162d4a900280f7146",
+      "alterado_desde_o_commit": false
+    }
+  },
+  "falhas": [
+    "[desktop] 5 arquivo(s) local(is) ausente(s)",
+    "[celular] 5 arquivo(s) local(is) ausente(s)"
+  ],
+  "avisos": [
+    "159 de 159 trecho(s) em japonês sem lang=\"ja\""
+  ],
+  "viewports": {
+    "desktop": {
+      "erros_script": [],
+      "erros_console": [
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+      ],
+      "recursos_locais_ausentes": [
+        "file:///home/claude/teste/audio/formal.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/casual.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_a1.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_b.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_a2.mp3 (net::ERR_FILE_NOT_FOUND)"
+      ],
+      "recursos_externos_falhos": [],
+      "rolagem_horizontal_px": 0,
+      "lang_documento": null,
+      "titulo": "O Japonês que Encolhe",
+      "trechos_japones": 159,
+      "trechos_japones_sem_lang_ja": 159,
+      "botoes_total": 60,
+      "botoes_sem_nome": 0,
+      "imagens_sem_alt": 0,
+      "campos_sem_rotulo": 0,
+      "h1": 1,
+      "links_internos_quebrados": [],
+      "cliques": {
+        "interpretacao": "reacao_observavel = algo mudou após o clique (DOM, play() de áudio, armazenamento ou endereço). Não prova que a função do botão está correta. Os cliques acumulam estado: um botão desabilitado após interações anteriores pode ter sido bloqueado pelo próprio teste.",
+        "resumo": {
+          "botoes": 60,
+          "clicados": 40,
+          "com_reacao_observavel": 40,
+          "sem_reacao_observavel": 0,
+          "nao_testados_ocultos": 0,
+          "nao_testados_desabilitados_desde_o_carregamento": 5,
+          "nao_testados_desabilitados_apos_interacoes_anteriores": 12,
+          "nao_testados_destrutivos": 3,
+          "cliques_falhos": 0
+        },
+        "detalhe": [
+          {
+            "indice": 0,
+            "rotulo": "1×",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 1,
+            "rotulo": "0,85×",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 2,
+            "rotulo": "0,7×",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 3,
+            "rotulo": "Ouvir frase formal",
+            "resultado": "nao_testado_desabilitado_desde_o_carregamento"
+          },
+          {
+            "indice": 4,
+            "rotulo": "Ouvir frase casual",
+            "resultado": "nao_testado_desabilitado_desde_o_carregamento"
+          },
+          {
+            "indice": 5,
+            "rotulo": "▶ Ouvir diálogo inteiro",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 6,
+            "rotulo": "Ouvir fala 1",
+            "resultado": "nao_testado_desabilitado_desde_o_carregamento"
+          },
+          {
+            "indice": 7,
+            "rotulo": "Ouvir fala 2",
+            "resultado": "nao_testado_desabilitado_desde_o_carregamento"
+          },
+          {
+            "indice": 8,
+            "rotulo": "Ouvir fala 3",
+            "resultado": "nao_testado_desabilitado_desde_o_carregamento"
+          },
+          {
+            "indice": 9,
+            "rotulo": "Mostrar formas completas",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 10,
+            "rotulo": "Marcar seção como concluída",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 11,
+            "rotulo": "Transforma a frase em pergunta.",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 12,
+            "rotulo": "É 「てしまった」 encolhido: aconteceu, e a pessoa lamenta",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 13,
+            "rotulo": "É um apelido carinhoso, como 「ちゃん」.",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 14,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 15,
+            "rotulo": "忘れてしまちゃった\nてしまった → ちゃった",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 16,
+            "rotulo": "飲んでしまじゃった\nでしまった → じゃった",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 17,
+            "rotulo": "見ておとかなければきゃ\nておかなければ → とかなきゃ",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 18,
+            "rotulo": "読んでいる\nている → てる",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 19,
+            "rotulo": "あるのんだから\nのだから → んだから",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 20,
+            "rotulo": "Encolher todas",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 21,
+            "rotulo": "Marcar seção como concluída",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 22,
+            "rotulo": "Marcar seção como concluída",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 23,
+            "rotulo": "見ておかなければ",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 24,
+            "rotulo": "見とかない",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 25,
+            "rotulo": "見なかった",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 26,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 27,
+            "rotulo": "食べてしまった",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 28,
+            "rotulo": "食べさせた",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 29,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 30,
+            "rotulo": "読んだ",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 31,
+            "rotulo": "読んでいる",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 32,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 33,
+            "rotulo": "行っちゃ",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 34,
+            "rotulo": "行かなきゃ",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 35,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 36,
+            "rotulo": "飲んちゃった",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 37,
+            "rotulo": "飲んどいた",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 38,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 39,
+            "rotulo": "買っとく",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 40,
+            "rotulo": "買わなきゃ",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 41,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 42,
+            "rotulo": "書類を家に忘れてきてしまいました。",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 43,
+            "rotulo": "書類、家に忘れた。",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 44,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 45,
+            "rotulo": "まだ。今日やっとかなきゃ。",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 46,
+            "rotulo": "まだ。今日やっちゃった。",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 47,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 48,
+            "rotulo": "見とかなきゃ é mais educado.",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 49,
+            "rotulo": "Não há diferença nenhuma.",
+            "resultado": "nao_testado_desabilitado_apos_interacoes_anteriores"
+          },
+          {
+            "indice": 50,
+            "rotulo": "Tentar de novo",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 51,
+            "rotulo": "Marcar seção como concluída",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 52,
+            "rotulo": "Ver resposta",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 53,
+            "rotulo": "Com esforço\namanhã",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 54,
+            "rotulo": "Marcar seção como concluída",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom",
+              "armazenamento"
+            ]
+          },
+          {
+            "indice": 55,
+            "rotulo": "Gerar código de progresso",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 56,
+            "rotulo": "Restaurar progresso",
+            "resultado": "reacao_observavel",
+            "sinais": [
+              "dom"
+            ]
+          },
+          {
+            "indice": 57,
+            "rotulo": "Apagar meu progresso",
+            "resultado": "nao_testado_destrutivo"
+          },
+          {
+            "indice": 58,
+            "rotulo": "Sim, apagar",
+            "resultado": "nao_testado_destrutivo"
+          },
+          {
+            "indice": 59,
+            "rotulo": "Cancelar",
+            "resultado": "nao_testado_destrutivo"
+          }
+        ]
+      }
+    },
+    "celular": {
+      "erros_script": [],
+      "erros_console": [
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND",
+        "Failed to load resource: net::ERR_FILE_NOT_FOUND"
+      ],
+      "recursos_locais_ausentes": [
+        "file:///home/claude/teste/audio/formal.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/casual.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_a1.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_b.mp3 (net::ERR_FILE_NOT_FOUND)",
+        "file:///home/claude/teste/audio/dlg_a2.mp3 (net::ERR_FILE_NOT_FOUND)"
+      ],
+      "recursos_externos_falhos": [],
+      "rolagem_horizontal_px": 0
+    }
+  }
+}

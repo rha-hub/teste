@@ -1,0 +1,74 @@
+{
+  "script": {
+    "nome": "teste-html-smoke.js",
+    "versao": "3"
+  },
+  "executado_em": "2026-10-30T05:36:52.549Z",
+  "ambiente": {
+    "node": "v22.23.4",
+    "playwright": "1.63.0",
+    "navegador": "chromium"
+  },
+  "alvo": {
+    "caminho": "/home/claude/teste/docs/index.html",
+    "url": "file:///home/claude/teste/docs/index.html",
+    "sha256": "e1e94ea108c32cdf15d468598bd7f9af5c465eb97a1962e989359783f7641e43",
+    "git": {
+      "raiz_repositorio": "/home/claude/teste",
+      "caminho_no_repositorio": "docs/index.html",
+      "commit": "cd08f0da92f994157fb1a55f2fb9080924dd427f",
+      "blob_no_commit": "1826247758d0a524c55afe208b09ba387aba9a49",
+      "alterado_desde_o_commit": false
+    }
+  },
+  "falhas": [
+    "[desktop] 1 arquivo(s) local(is) ausente(s)",
+    "[celular] 1 arquivo(s) local(is) ausente(s)"
+  ],
+  "avisos": [],
+  "viewports": {
+    "desktop": {
+      "erros_script": [],
+      "erros_console": [],
+      "recursos_locais_ausentes": [
+        "file:///home/claude/teste/P%C3%A1ginas-modelo%20%C2%B7%20Cap.%204%20%C2%B7%20A%20tinta%20e%20carimbo%20%20B%20educacional%20limpo.pdf (net::ERR_FILE_NOT_FOUND)"
+      ],
+      "recursos_externos_falhos": [],
+      "rolagem_horizontal_px": 0,
+      "lang_documento": "pt-BR",
+      "titulo": "Material - Capítulo 4",
+      "trechos_japones": 0,
+      "trechos_japones_sem_lang_ja": 0,
+      "botoes_total": 0,
+      "botoes_sem_nome": 0,
+      "imagens_sem_alt": 0,
+      "campos_sem_rotulo": 0,
+      "h1": 1,
+      "links_internos_quebrados": [],
+      "cliques": {
+        "interpretacao": "reacao_observavel = algo mudou após o clique (DOM, play() de áudio, armazenamento ou endereço). Não prova que a função do botão está correta. Os cliques acumulam estado: um botão desabilitado após interações anteriores pode ter sido bloqueado pelo próprio teste.",
+        "resumo": {
+          "botoes": 0,
+          "clicados": 0,
+          "com_reacao_observavel": 0,
+          "sem_reacao_observavel": 0,
+          "nao_testados_ocultos": 0,
+          "nao_testados_desabilitados_desde_o_carregamento": 0,
+          "nao_testados_desabilitados_apos_interacoes_anteriores": 0,
+          "nao_testados_destrutivos": 0,
+          "cliques_falhos": 0
+        },
+        "detalhe": []
+      }
+    },
+    "celular": {
+      "erros_script": [],
+      "erros_console": [],
+      "recursos_locais_ausentes": [
+        "file:///home/claude/teste/P%C3%A1ginas-modelo%20%C2%B7%20Cap.%204%20%C2%B7%20A%20tinta%20e%20carimbo%20%20B%20educacional%20limpo.pdf (net::ERR_FILE_NOT_FOUND)"
+      ],
+      "recursos_externos_falhos": [],
+      "rolagem_horizontal_px": 0
+    }
+  }
+}
